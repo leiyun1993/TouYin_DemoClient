@@ -1,4 +1,4 @@
-#仿抖音APP的点赞效果
+# 仿抖音APP的点赞效果
 
 ### 点赞效果
 
@@ -48,6 +48,7 @@ likeBtn.setOnLikeListener(object : OnLikeListener {
 
 ### 我们可以看一下点赞按钮的点赞效果
 ![](screenshot/1.gif)
+
 和抖音的还是有点区别的，后续完善
 
 ### 屏幕点赞
