@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGround"
+    android:clipChildren="false"
+    tools:context="com.yunlei.douyinlike.MainActivity">
+
+    <com.yunlei.douyinlike.LikeLayout
+        android:id="@+id/likeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.like.LikeButton
+        android:id="@+id/likeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:icon_size="40dp"
+        app:icon_type="heart"
+        app:like_drawable="@mipmap/ic_heart_on"
+        app:unlike_drawable="@mipmap/ic_heart_off" />
+
+</RelativeLayout>
