@@ -3,6 +3,10 @@
 ### 点赞效果
 
 抖音的点赞效果是由右侧的桃心点赞和屏幕的点击构成，右侧的点击后为点赞状态并有点赞动画，再次点击取消点赞。
+
+### 先来看看效果：
+![](screenshot/2.gif)
+
 此处我们观察效果基本和此前用过的一个三方库比较相似，此处就先又此代替，后面有时间再进行完善。
 该库为[Like Button](https://github.com/jd-alexander/LikeButton),使用方式很简单，如下：
 ```xml
@@ -133,6 +137,5 @@ hideSet.addListener(object : AnimatorListenerAdapter() {
     }
 })
 ```
-### 最终效果如下：
-![](screenshot/2.gif)
+
 
