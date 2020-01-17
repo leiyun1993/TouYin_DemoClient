@@ -10,7 +10,7 @@
 此处我们观察效果基本和此前用过的一个三方库比较相似，此处就先又此代替，后面有时间再进行完善。
 该库为[Like Button](https://github.com/jd-alexander/LikeButton),使用方式很简单，如下：
 ```xml
-<com.like.LikeButton
+<com.github.like.LikeButton
     android:id="@+id/likeBtn"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
 ```
 **LikeButton**具有以下属性,使用时可自行去查看
 ```xml
-<com.like.LikeButton
+<com.github.like.LikeButton
     app:icon_type="Star"
     app:circle_start_color="@color/colorPrimary"
     app:like_drawable="@drawable/thumb_on"

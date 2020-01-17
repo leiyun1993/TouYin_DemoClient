@@ -8,20 +8,40 @@
     android:clipChildren="false"
     tools:context="com.yunlei.douyinlike.MainActivity">
 
-    <com.yunlei.douyinlike.LikeLayout
-        android:id="@+id/likeLayout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/navigationBarLayout" />
 
-    <com.like.LikeButton
-        android:id="@+id/likeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        app:icon_size="40dp"
-        app:icon_type="heart"
-        app:like_drawable="@mipmap/ic_heart_on"
-        app:unlike_drawable="@mipmap/ic_heart_off" />
+    <LinearLayout
+        android:id="@+id/navigationBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <TextView
+            style="@style/item_navigation_bar_txt"
+            android:text="首页"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/item_navigation_bar_txt"
+            android:text="同城" />
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_add_box_black_24dp" />
+
+        <TextView
+            style="@style/item_navigation_bar_txt"
+            android:text="消息" />
+
+        <TextView
+            style="@style/item_navigation_bar_txt"
+            android:text="我" />
+    </LinearLayout>
 </RelativeLayout>

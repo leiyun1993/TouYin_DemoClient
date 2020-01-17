@@ -1,4 +1,4 @@
-package com.yunlei.douyinlike
+package com.yunlei.douyinlike.widget
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -7,10 +7,14 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Message
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.yunlei.douyinlike.R
+import java.lang.ref.WeakReference
 import java.util.*
 
 /**
@@ -25,12 +29,15 @@ import java.util.*
 class LikeLayout : FrameLayout {
 
     var onLikeListener: () -> Unit = {}     //屏幕点赞后，点赞按钮需同步点赞
+    var onPauseListener: () -> Unit = {}     //暂停 或者 继续播放
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private var icon: Drawable = resources.getDrawable(R.mipmap.ic_heart)
+    private var mClickCount = 0     //点击一次是暂停，多次是点赞
+    private val mHandler = LikeLayoutHandler(this)
 
     init {
         clipChildren = false        //避免旋转时红心被遮挡
@@ -40,10 +47,27 @@ class LikeLayout : FrameLayout {
         if (event?.action == MotionEvent.ACTION_DOWN) {     //按下时在Layout中生成红心
             val x = event.x
             val y = event.y
-            addHeartView(x, y)
-            onLikeListener()
+            mClickCount++
+            if (mClickCount >= 2) {
+                addHeartView(x, y)
+                onLikeListener()
+            }
+            mHandler.removeCallbacksAndMessages(null)
+            mHandler.sendEmptyMessageDelayed(0, 200)
         }
         return super.onTouchEvent(event)
+    }
+
+    private fun pauseClick() {
+        if (mClickCount == 1) {
+            onPauseListener()
+        }
+        mClickCount = 0
+    }
+
+    fun onPause() {
+        mClickCount = 0
+        mHandler.removeCallbacksAndMessages(null)
     }
 
     /**
@@ -112,4 +136,14 @@ class LikeLayout : FrameLayout {
      * 生成一个随机的左右偏移量
      */
     private fun getRandomRotate(): Float = (Random().nextInt(20) - 10).toFloat()
+
+    companion object {
+        private class LikeLayoutHandler(view: LikeLayout) : Handler() {
+            private val mView = WeakReference(view)
+            override fun handleMessage(msg: Message?) {
+                super.handleMessage(msg)
+                mView.get()?.pauseClick()
+            }
+        }
+    }
 }
