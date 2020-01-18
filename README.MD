@@ -44,8 +44,9 @@ private PagerSnapHelper mPagerSnapHelper;
 ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/5.png)
 
 看最后实现的效果
-
-![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif)|![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif)|
+| 视频切换 | 点赞和视频控制 |
+| ------ | ------ |
+| ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif) | ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif) |
 
 ### 4、无限上滑
 
