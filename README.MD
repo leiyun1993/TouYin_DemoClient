@@ -43,7 +43,7 @@ private PagerSnapHelper mPagerSnapHelper;
 
 ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/5.png)
 
-看最后实现的效果
+看最后实现的效果，**只是为了做实验，代码写的比较乱。**（gif有点大，加载比较慢）
 
 ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif)
 ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif)
