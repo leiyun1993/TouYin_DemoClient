@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
 //            "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4",
             "https://chengdu-1259068866.cos.ap-chengdu.myqcloud.com/177d7bcff446ba6670089d0793a5a8df.mp4"
     )
+    private lateinit var mPagerAdapter: HomeViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +56,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ImmersionBar.with(this).titleBar(toolBar).init()
-        viewPager.adapter = HomeViewPagerAdapter(this, urlList)
+        mPagerAdapter = HomeViewPagerAdapter(this, urlList)
+        viewPager.adapter = mPagerAdapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 EventBus.getDefault().post(ClearPositionEvent(true))
+                if (position==urlList.size-1){
+                    urlList.add(urlList[0])
+                    mPagerAdapter.notifyDataSetChanged()
+                }
             }
         })
 
