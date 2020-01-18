@@ -1,10 +1,93 @@
-# 仿抖音APP的点赞效果
+# TouYin 仿抖音APP视频切换和点赞效果
 
-### 点赞效果
+### 1、ViewPager2
+
+网上很多仿抖音视频切换的很多都是使用自定义竖方向的ViewPager或者使用RecyclerView+PagerSnapHelper实现。
+但是这两种方式其实都有一定的缺陷：
+
+1、但是ViewPager实现，生命周期有一定问题(ps:FragmentPagerAdapter在新版本中提供了BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT来解决这个问题)，notifyDataSetChanged支持很不好。关于生命周期的更新可以参考[androidx中的Fragment懒加载方案](https://blog.csdn.net/qq_36486247/article/details/102531304)
+
+2、而使用RecyclerView+PagerSnapHelper实现，需要自己处理生命周期。
+
+其实我们可以使用androidx中提供的ViewPage2来实现这个功能。
+```
+dependencies {
+	implementation "androidx.viewpager2:viewpager2:1.0.0"
+}
+```
+查看源码，ViewPager2继承自ViewGroup，其中发现了三个比较重要的成员变量：
+```java
+private LinearLayoutManager mLayoutManager;
+RecyclerView mRecyclerView;
+private PagerSnapHelper mPagerSnapHelper;
+```
+明眼人一看就知道了，ViewPager2的核心实现就是**RecyclerView+LinearLayoutManager+PagerSnapHelper**了，因为LinearLayoutManager本身就支持竖向和横向两种布局方式，所以ViewPager2也能很容易地支持这两种滚动方向了，而几乎不需要添加任何多余的代码。
+
+使用上和老的ViewPager基本没啥却别，下面ViewPager2的几个新东西：
+>* 支持RTL布局
+>* 支持竖向滚动
+>* 完整支持notifyDataSetChanged
+>* FragmentStateAdapter替换了原来的 FragmentStatePagerAdapter
+>* RecyclerView.Adapter替换了原来的 PagerAdapter
+>* registerOnPageChangeCallback替换了原来的 addPageChangeListener (刚开始使用没看完源码，按照之前的set或者add找了半天，囧)
+>* public void setUserInputEnabled(boolean enabled)禁止滑动
+>* ...
+
+关于更多ViewPager2的资料大家可以自行搜索。
+
+### 2、视频播放器
+
+本demo中使用的是[GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)，实际项目中可自行选择封装。demo中没有对其进行过多的处理，只是为了看效果，实际的抖音中有更多复杂的东西。
+
+### 3、demo结构
+
+![](screenshot/5.png)
+
+看最后实现的效果
+
+| ![](screenshot/3.gif) | ![](screenshot/4.gif) |
+
+### 4、无限上滑
+
+借助ViewPager2的监听和adapter的notifyDataSetChanged即可实现
+```kotlin
+viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+	override fun onPageSelected(position: Int) {
+		super.onPageSelected(position)
+		if (position==urlList.size-1){
+			urlList.add(urlList[0])
+			mPagerAdapter.notifyDataSetChanged()
+		}
+	}
+})
+```
+### 5、视频和作者主页切换控制
+```kotlin
+override fun onResume() {
+	super.onResume()
+	if (mCurrentPosition > 0) {
+		videoPlayer?.onVideoResume(false)
+	} else {
+		videoPlayer?.postDelayed({
+			videoPlayer?.startPlayLogic()
+		}, 200)
+	}
+}
+override fun onPause() {
+	super.onPause()
+	likeLayout?.onPause()
+	videoPlayer?.onVideoPause()
+	mCurrentPosition = videoPlayer?.gsyVideoManager?.currentPosition ?: 0
+}
+```
+
+
+### 6、点赞效果
 
 抖音的点赞效果是由右侧的桃心点赞和屏幕的点击构成，右侧的点击后为点赞状态并有点赞动画，再次点击取消点赞。
 
-### 先来看看效果：
+先来看看效果：
+
 ![](screenshot/2.gif)
 
 此处我们观察效果基本和此前用过的一个三方库比较相似，此处就先又此代替，后面有时间再进行完善。
@@ -50,12 +133,13 @@ likeBtn.setOnLikeListener(object : OnLikeListener {
 })
 ```
 
-### 我们可以看一下点赞按钮的点赞效果
+我们可以看一下点赞按钮的点赞效果
+
 ![](screenshot/1.gif)
 
 和抖音的还是有点区别的，后续完善
 
-### 屏幕点赞
+### 7、屏幕点赞
 
 分析抖音的屏幕点赞由几个部分组合而成（红心可自绘，也可以直接使用图片）
 > 1、刚开始显示的时候，有个由大到小缩放动画
@@ -68,7 +152,7 @@ likeBtn.setOnLikeListener(object : OnLikeListener {
 
 > 5、刚开始显示的时候有个小小的偏移，避免每个红心在同一个位置
 
-#### 实现过程
+#### 8、实现过程
 获取红心
 ```kotlin
 private var icon: Drawable = resources.getDrawable(R.mipmap.ic_heart)
@@ -136,6 +220,38 @@ hideSet.addListener(object : AnimatorListenerAdapter() {
         removeView(img)     //动画结束移除红心
     }
 })
+```
+区分单击和多次点击，单击的时候控制视频的暂停和播放，多次点击的时候实现点赞功能
+```kotlin
+override fun onTouchEvent(event: MotionEvent?): Boolean {
+	if (event?.action == MotionEvent.ACTION_DOWN) {     //按下时在Layout中生成红心
+		val x = event.x
+		val y = event.y
+		mClickCount++
+		mHandler.removeCallbacksAndMessages(null)
+		if (mClickCount >= 2) {
+			addHeartView(x, y)
+			onLikeListener()
+			mHandler.sendEmptyMessageDelayed(1, 500)
+		} else {
+			mHandler.sendEmptyMessageDelayed(0, 500)
+		}
+
+	}
+	return true
+}
+
+private fun pauseClick() {
+	if (mClickCount == 1) {
+		onPauseListener()
+	}
+	mClickCount = 0
+}
+
+fun onPause() {
+	mClickCount = 0
+	mHandler.removeCallbacksAndMessages(null)
+}
 ```
 
 
