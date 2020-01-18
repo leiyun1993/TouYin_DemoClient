@@ -48,15 +48,19 @@ class LikeLayout : FrameLayout {
             val x = event.x
             val y = event.y
             mClickCount++
+            mHandler.removeCallbacksAndMessages(null)
             if (mClickCount >= 2) {
                 addHeartView(x, y)
                 onLikeListener()
+                mHandler.sendEmptyMessageDelayed(1, 500)
+            } else {
+                mHandler.sendEmptyMessageDelayed(0, 500)
             }
-            mHandler.removeCallbacksAndMessages(null)
-            mHandler.sendEmptyMessageDelayed(0, 200)
+
         }
-        return super.onTouchEvent(event)
+        return true
     }
+
 
     private fun pauseClick() {
         if (mClickCount == 1) {
@@ -142,7 +146,11 @@ class LikeLayout : FrameLayout {
             private val mView = WeakReference(view)
             override fun handleMessage(msg: Message?) {
                 super.handleMessage(msg)
-                mView.get()?.pauseClick()
+                when(msg?.what){
+                    0-> mView.get()?.pauseClick()
+                    1-> mView.get()?.onPause()
+                }
+
             }
         }
     }
