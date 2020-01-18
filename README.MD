@@ -41,11 +41,11 @@ private PagerSnapHelper mPagerSnapHelper;
 
 ### 3、demo结构
 
-![](screenshot/5.png)
+![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/5.png)
 
 看最后实现的效果
 
-| ![](screenshot/3.gif) | ![](screenshot/4.gif) |
+| ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif) | ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif) |
 
 ### 4、无限上滑
 
@@ -88,7 +88,7 @@ override fun onPause() {
 
 先来看看效果：
 
-![](screenshot/2.gif)
+![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/2.gif)
 
 此处我们观察效果基本和此前用过的一个三方库比较相似，此处就先又此代替，后面有时间再进行完善。
 该库为[Like Button](https://github.com/jd-alexander/LikeButton),使用方式很简单，如下：
@@ -135,7 +135,7 @@ likeBtn.setOnLikeListener(object : OnLikeListener {
 
 我们可以看一下点赞按钮的点赞效果
 
-![](screenshot/1.gif)
+![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/1.gif)
 
 和抖音的还是有点区别的，后续完善
 
