@@ -45,7 +45,7 @@ private PagerSnapHelper mPagerSnapHelper;
 
 看最后实现的效果
 
-| ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif) | ![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif) |
+![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/3.gif)|![](https://github.com/leiyun1993/DouYinLike/raw/master/screenshot/4.gif)|
 
 ### 4、无限上滑
 
